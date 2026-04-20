@@ -32,10 +32,6 @@ export const ApiFetch = async <T>(
     });
 
     if (!res.ok) {
-      if (res.status === 404) {
-        notFound();
-      }
-
       throw new Error(`API request failed with status ${res.status}`);
     }
 

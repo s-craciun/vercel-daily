@@ -51,8 +51,8 @@ export const getArticlesByParams = async (
 };
 
 export const getFeaturedArticles = async (): Promise<IArticle[]> => {
-  cacheTag("featured-articles");
-  cacheLife("articles");
+  // cacheTag("featured-articles");
+  // cacheLife("articles");
 
   const {
     data: { data: articles },
