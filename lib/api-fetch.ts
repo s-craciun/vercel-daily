@@ -22,6 +22,7 @@ export const ApiFetch = async <T>(
       finalParams.body = JSON.stringify(reqBody);
     }
 
+    console.log("Making API request to:", baseUrl + url);
     const res = await fetch(baseUrl + url, {
       ...finalParams,
       headers: {
