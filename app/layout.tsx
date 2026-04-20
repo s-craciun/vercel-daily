@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import { type Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "./components/header";
-import { Footer } from "./components/footer";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { SubscriptionContextProvider } from "@/context/subscription-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vercel Daily",
-  description: "Vercel Certification Exercise",
+  title: {
+    default: "Vercel Daily",
+    template: "Vercel Daily - %s",
+  },
+  description: "News and insights for modern web developers.",
 };
 
 export default function RootLayout({
@@ -29,9 +33,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <SubscriptionContextProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </SubscriptionContextProvider>
       </body>
     </html>
   );
