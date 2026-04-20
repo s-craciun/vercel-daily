@@ -7,7 +7,8 @@ export const ApiFetch = async <T>(
   params?: Parameters<typeof fetch>[1]
 ) => {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+    process.env.NEXT_PUBLIC_API_BASE_URL ??
+    "https://vercel-daily-news-api.vercel.app/api";
   const baseParams: Parameters<typeof fetch>[1] = {
     headers: {
       "x-vercel-protection-bypass": process.env.VERCEL_PROTECTION_BYPASS || "",
@@ -22,7 +23,6 @@ export const ApiFetch = async <T>(
       finalParams.body = JSON.stringify(reqBody);
     }
 
-    console.log("Making API request to:", baseUrl + url);
     const res = await fetch(baseUrl + url, {
       ...finalParams,
       headers: {
