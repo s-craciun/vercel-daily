@@ -1,13 +1,16 @@
+import { getCategories } from "@/utils/cached-fetch";
 import { ArticlesFallback } from "@/components/layout/fallbacks";
 import { CONTAINER_PADDING } from "@/constants/constants";
+import { SearchFilterForm } from "@/components/search-filter/search-filter-form";
 
-export default function SearchLoading() {
+export default async function SearchLoading() {
+  const categories = await getCategories();
+
   return (
-    <div className={CONTAINER_PADDING}>
-      <div className="w-[50%] h-10 bg-gray-300 rounded animate-pulse mb-4" />
-      <div className="w-full h-10 bg-gray-300 rounded animate-pulse mb-4" />
-      <div className="w-full h-10 bg-gray-300 rounded animate-pulse mb-5" />
+    <section className={CONTAINER_PADDING}>
+      <h1 className="text-3xl font-bold mb-4">Search Articles</h1>
+      <SearchFilterForm categories={categories} />
       <ArticlesFallback />
-    </div>
+    </section>
   );
 }

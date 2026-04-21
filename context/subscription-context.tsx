@@ -1,7 +1,6 @@
 "use client";
 
-import { API_METHODS, API_ROUTES } from "@/constants/constants";
-import { getServerApi } from "@/utils/get-server-api";
+import { checkSubscriptionStatusAction } from "@/utils/subscription-server-actions";
 import {
   createContext,
   type Dispatch,
@@ -37,13 +36,8 @@ export const SubscriptionContextProvider: FC<PropsWithChildren> = memo(
 
     const checkSubscriptionStatus = useCallback(async () => {
       try {
-        const api = await getServerApi(API_ROUTES.SUBSCRIPTION);
-        const res = await fetch(api.url, {
-          method: API_METHODS.GET,
-          next: { revalidate: 10 },
-        });
-        const data = await res.json();
-        setStatus(!!data.hasToken);
+        const hasSubscription = await checkSubscriptionStatusAction();
+        setStatus(hasSubscription);
       } catch {
         setStatus(false);
       } finally {
@@ -73,7 +67,7 @@ export const SubscriptionContextProvider: FC<PropsWithChildren> = memo(
         {children}
       </SubscriptionContext.Provider>
     );
-  }
+  },
 );
 
 export const useSubscriptionContext = () => {
@@ -81,7 +75,7 @@ export const useSubscriptionContext = () => {
 
   if (!context) {
     throw new Error(
-      "useSubscriptionContext must be used within a SubscriptionContextProvider"
+      "useSubscriptionContext must be used within a SubscriptionContextProvider",
     );
   }
 

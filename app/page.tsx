@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   return (
-    <div>
+    <section>
       <Suspense fallback={<BreakingNewsFallback />}>
         <BreakingNewsBanner />
       </Suspense>
@@ -36,6 +36,6 @@ export default async function HomePage() {
       <Suspense fallback={<FeaturedSectionFallback />}>
         <FeaturedArticles />
       </Suspense>
-    </div>
+    </section>
   );
 }
