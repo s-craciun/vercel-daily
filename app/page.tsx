@@ -1,9 +1,11 @@
 import { type Metadata } from "next";
-import { getBreakingNews } from "@/utils/cached-fetch";
 import { BreakingNewsBanner } from "@/components/articles/breaking-news-banner";
 import { HeroSection } from "@/components/layout/hero-section";
 import { Suspense } from "react";
-import { FeaturedSectionFallback } from "@/components/layout/fallbacks";
+import {
+  BreakingNewsFallback,
+  FeaturedSectionFallback,
+} from "@/components/layout/fallbacks";
 import { FeaturedArticles } from "@/components/articles/featured-articles";
 
 export const metadata: Metadata = {
@@ -25,11 +27,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const breakingNews = await getBreakingNews();
-
   return (
     <div>
-      {breakingNews && <BreakingNewsBanner breakingNews={breakingNews} />}
+      <Suspense fallback={<BreakingNewsFallback />}>
+        <BreakingNewsBanner />
+      </Suspense>
       <HeroSection />
       <Suspense fallback={<FeaturedSectionFallback />}>
         <FeaturedArticles />

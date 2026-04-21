@@ -40,9 +40,9 @@ export const SubscriptionContextProvider: FC<PropsWithChildren> = memo(
         const api = await getServerApi(API_ROUTES.SUBSCRIPTION);
         const res = await fetch(api.url, {
           method: API_METHODS.GET,
+          next: { revalidate: 10 },
         });
         const data = await res.json();
-
         setStatus(!!data.hasToken);
       } catch {
         setStatus(false);
