@@ -34,6 +34,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
+  console.log(process.env.NEXT_PUBLIC_API_BASE_URL);
   const [articles, breakingNews] = await Promise.all([
     getFeaturedArticles(),
     getBreakingNews(),

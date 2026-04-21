@@ -1,5 +1,4 @@
 import { API_METHODS } from "@/constants/constants";
-import { notFound } from "next/navigation";
 
 export const ApiFetch = async <T>(
   url: string,
