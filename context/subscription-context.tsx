@@ -1,12 +1,15 @@
 "use client";
 
-import { API_METHODS } from "@/constants/constants";
+import { API_METHODS, API_ROUTES } from "@/constants/constants";
 import { getServerApi } from "@/utils/get-server-api";
 import {
   createContext,
+  type Dispatch,
   type FC,
   memo,
   type PropsWithChildren,
+  type SetStateAction,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -15,47 +18,55 @@ import {
 
 interface ISubscriptionContext {
   status: boolean;
-  setSubscriptionData: () => void;
+  loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
   checkSubscriptionStatus: () => void;
 }
 
 const SubscriptionContext = createContext<ISubscriptionContext>({
   status: false,
-  setSubscriptionData: () => {},
+  loading: false,
+  setLoading: () => {},
   checkSubscriptionStatus: () => {},
 });
 
 export const SubscriptionContextProvider: FC<PropsWithChildren> = memo(
   function Provider({ children }) {
     const [status, setStatus] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-      const getSubscriptionStatus = async () => {
-        const api = await getServerApi("/subscription");
-        const { ok } = await fetch(api.url, {
+    const checkSubscriptionStatus = useCallback(async () => {
+      try {
+        const api = await getServerApi(API_ROUTES.SUBSCRIPTION);
+        const res = await fetch(api.url, {
           method: API_METHODS.GET,
         });
+        const data = await res.json();
 
-        if (!ok) {
-          return;
-        }
+        setStatus(!!data.hasToken);
+      } catch {
+        setStatus(false);
+      } finally {
+        setLoading(false);
+      }
+    }, []);
 
-        setStatus(ok);
+    useEffect(() => {
+      const checkStatus = async () => {
+        checkSubscriptionStatus();
       };
 
-      getSubscriptionStatus();
-    });
-
-    const setSubscriptionData = () => {};
-    const checkSubscriptionStatus = () => {};
+      checkStatus();
+    }, [checkSubscriptionStatus]);
 
     const value = useMemo(() => {
       return {
         status,
-        setSubscriptionData,
+        loading,
+        setLoading,
         checkSubscriptionStatus,
       };
-    }, [status]);
+    }, [status, loading, checkSubscriptionStatus]);
 
     return (
       <SubscriptionContext.Provider value={value}>

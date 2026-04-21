@@ -7,6 +7,26 @@ export enum API_METHODS {
   DELETE = "DELETE",
 }
 
+export enum API_ROUTES {
+  ARTICLES = "/articles",
+  BREAKING_NEWS = "/breaking-news",
+  CATEGORIES = "/categories",
+  TRENDING = "/articles/trending",
+  FEATURED = "/articles?featured=true",
+  CREATE_SUBSCRIPTION = "/subscription/create",
+  SUBSCRIPTION = "/subscription",
+}
+
+export enum CACHE_TAGS {
+  ARTICLES = "articles",
+  FILTERED_ARTICLES = "filtered-articles",
+  FEATURED_ARTICLES = "featured-articles",
+  TRENDING_ARTICLES = "trending-articles",
+  BREAKING_NEWS = "breaking-news",
+  CATEGORIES = "categories",
+  ARTICLE = "article",
+}
+
 export enum ButtonVariants {
   DEFAULT = "default",
   OUTLINE = "outline",

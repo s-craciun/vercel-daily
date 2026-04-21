@@ -9,9 +9,9 @@ export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const commonButtonStyles =
-  "inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90";
+  "inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-opacity hover:opacity-70 cursor-pointer";
 const buttonVariants = {
-  [ButtonVariants.DEFAULT]: `${commonButtonStyles} bg-foreground text-background`,
+  [ButtonVariants.DEFAULT]: `${commonButtonStyles} bg-foreground text-background border border-foreground`,
   [ButtonVariants.OUTLINE]: `${commonButtonStyles} bg-background text-foreground border border-gray-200`,
   [ButtonVariants.LINK]:
     "px-4 py-2 text-muted-foreground underline-offset-4 hover:underline",

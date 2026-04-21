@@ -14,7 +14,7 @@ export default function NotFound() {
       <h1 className="text-3xl font-bold mb-4">404 - Not Found D:</h1>
       <p className="text-lg text-muted-foreground mb-6">{message}</p>
       <Button href="/" variant={ButtonVariants.OUTLINE}>
-        Go Back Home
+        Go to Home Page
       </Button>
     </div>
   );

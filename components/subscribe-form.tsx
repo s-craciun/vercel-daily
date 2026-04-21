@@ -4,40 +4,51 @@ import {
   createSubscription,
   deactivateSubscription,
 } from "@/utils/subscription-actions";
-import { Button } from "./button/button";
 import { useSubscriptionContext } from "@/context/subscription-context";
 import { ButtonVariants } from "@/constants/constants";
-import { type FC } from "react";
+import { useCallback, type FC } from "react";
+import { ClientButton } from "./button/client-button";
 
 interface ISubscribeFormProps {
   withLabel?: boolean;
 }
 
 export const SubscribeForm: FC<ISubscribeFormProps> = ({ withLabel }) => {
-  const { status } = useSubscriptionContext();
+  const { status, loading, setLoading, checkSubscriptionStatus } =
+    useSubscriptionContext();
+
+  const handleSubscriptionToggle = useCallback(() => {
+    setLoading(true);
+
+    if (status) {
+      deactivateSubscription(checkSubscriptionStatus);
+    } else {
+      createSubscription(checkSubscriptionStatus);
+    }
+  }, [status, setLoading, checkSubscriptionStatus]);
 
   return (
-    <form
-      className="flex justify-center items-center gap-2"
-      action={() => {
-        if (status) {
-          deactivateSubscription();
-        } else {
-          createSubscription();
-        }
-      }}
-    >
-      {withLabel && (
-        <span className="text-sm text-muted-foreground">
-          {status ? "You are subscribed!" : "You are not subscribed yet!"}
+    <div>
+      {!loading ? (
+        <div className="flex justify-center items-center gap-5">
+          {withLabel && (
+            <span className="text-sm text-muted-foreground">
+              {status ? "You are subscribed!" : "You are not subscribed yet!"}
+            </span>
+          )}
+          <ClientButton
+            type="submit"
+            variant={status ? ButtonVariants.OUTLINE : ButtonVariants.DEFAULT}
+            onClick={handleSubscriptionToggle}
+          >
+            {status ? "Unsubscribe" : "Subscribe"}
+          </ClientButton>
+        </div>
+      ) : (
+        <span className="text-sm text-muted-foreground px-4 py-2 font-medium">
+          Processing your subscription...
         </span>
       )}
-      <Button
-        type="submit"
-        variant={status ? ButtonVariants.OUTLINE : ButtonVariants.DEFAULT}
-      >
-        {status ? "Unsubscribe" : "Subscribe"}
-      </Button>
-    </form>
+    </div>
   );
 };

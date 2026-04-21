@@ -6,7 +6,7 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import Image from "next/image";
 import { type IArticle } from "@/types/article";
 import { useSubscriptionContext } from "@/context/subscription-context";
-import { SubscribeForm } from "./subscribe-form";
+import { SubscribeForm } from "../subscribe-form";
 
 const MarkdownComponents: Components = {
   p: ({ children }) => (

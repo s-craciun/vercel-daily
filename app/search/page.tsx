@@ -1,11 +1,10 @@
-import { getArticlesByParams, getCategories } from "@/utils/cached-fetch";
-import { CONTAINER_PADDING, GRID_CONTAINER } from "@/constants/constants";
+import { getCategories } from "@/utils/cached-fetch";
+import { CONTAINER_PADDING } from "@/constants/constants";
 import { type Metadata } from "next";
-import { ArticleListItem } from "@/components/article-list-item";
 import { ArticlesFallback } from "@/components/layout/fallbacks";
-import { NoAvailableArticles } from "@/components/layout/no-available-articles";
 import { Suspense } from "react";
 import { SearchFilterForm } from "@/components/search-filter/search-filter-form";
+import { SearchResults } from "@/components/search-filter/search-results";
 
 export const metadata: Metadata = {
   title: "Search",
@@ -19,22 +18,15 @@ export const metadata: Metadata = {
 };
 
 interface ISearchPageProps {
-  searchParams: {
+  searchParams: Promise<{
     search?: string;
     category?: string;
-  };
+  }>;
 }
 
 export default async function SearchPage({ searchParams }: ISearchPageProps) {
   const { search, category } = await searchParams;
-  const [articles, categories] = await Promise.all([
-    getArticlesByParams({
-      search,
-      category,
-      limit: 5,
-    }),
-    getCategories(),
-  ]);
+  const categories = await getCategories();
 
   return (
     <section className={CONTAINER_PADDING}>
@@ -45,15 +37,7 @@ export default async function SearchPage({ searchParams }: ISearchPageProps) {
         categories={categories}
       />
       <Suspense fallback={<ArticlesFallback />}>
-        {articles?.length ? (
-          <div className={GRID_CONTAINER}>
-            {articles.map((article) => {
-              return <ArticleListItem key={article.id} article={article} />;
-            })}
-          </div>
-        ) : (
-          <NoAvailableArticles message="No matching articles. Please change your filters." />
-        )}
+        <SearchResults search={search} category={category} />
       </Suspense>
     </section>
   );

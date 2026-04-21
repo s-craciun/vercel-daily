@@ -1,4 +1,4 @@
-import { ArticleListItem } from "@/components/article-list-item";
+import { ArticleListItem } from "@/components/articles/article-list-item";
 import { ArticlesFallback } from "@/components/layout/fallbacks";
 import { NoAvailableArticles } from "@/components/layout/no-available-articles";
 import { getAllArticles } from "@/utils/cached-fetch";

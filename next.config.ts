@@ -4,11 +4,16 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   cacheLife: {
-    // As course says, "Blog posts - longer cache, updates are rare :D"
+    // As course says, "Blog posts - longer cache, updates are rare" :D
     articles: {
       stale: 3600, // 1 hour
       revalidate: 86400, // 24 hours
       expire: 604800, // 7 days
+    },
+    categories: {
+      stale: 3600, // 1 hour
+      revalidate: 10800, // 3 hours
+      expire: 86400, // 24 hours
     },
   },
   images: {
