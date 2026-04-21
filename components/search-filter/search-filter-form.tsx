@@ -24,9 +24,9 @@ export const SearchFilterForm: FC<ISearchFilterFormProps> = ({
         applySearchFilters(formData);
       }}
     >
-      <div className="flex items-center gap-10 mb-5">
+      <div className="flex flex-col md:flex-row items-center gap-10 mb-5">
         <SearchBox value={initialSearch} />
-        <div className="w-[20%]">
+        <div className="w-[100%] md:w-[20%]">
           <Select value={initialCategory} options={categories} />
         </div>
       </div>

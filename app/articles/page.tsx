@@ -8,6 +8,15 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Articles",
+  description:
+    "Explore our collection of insightful articles on web development.",
+  openGraph: {
+    title: "Vercel Daily - Articles",
+    description:
+      "Explore our collection of insightful articles on web development.",
+    siteName: "Vercel Daily",
+    type: "website",
+  },
 };
 
 export default async function ArticlesPage() {

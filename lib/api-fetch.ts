@@ -1,21 +1,33 @@
 import { API_METHODS } from "@/constants/constants";
+import { type IApiResponse } from "@/types/types";
 
 export const ApiFetch = async <T>(
   url: string,
   reqBody?: Record<string, unknown> | null,
   params?: Parameters<typeof fetch>[1]
 ) => {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ??
-    "https://vercel-daily-news-api.vercel.app/api";
-  const baseParams: Parameters<typeof fetch>[1] = {
-    headers: {
-      "x-vercel-protection-bypass": process.env.VERCEL_PROTECTION_BYPASS || "",
-    },
-    method: API_METHODS.GET,
-  };
-
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+    if (!baseUrl) {
+      throw new Error("API base URL is not defined in environment variables");
+    }
+
+    const bypass = process.env.VERCEL_PROTECTION_BYPASS;
+
+    if (!bypass) {
+      throw new Error(
+        "Vercel protection bypass token is not defined in environment variables"
+      );
+    }
+
+    const baseParams: Parameters<typeof fetch>[1] = {
+      headers: {
+        "x-vercel-protection-bypass": bypass,
+      },
+      method: API_METHODS.GET,
+    };
+
     const finalParams = { ...baseParams, ...(params || {}) };
 
     if (reqBody) {
@@ -31,13 +43,15 @@ export const ApiFetch = async <T>(
     });
 
     if (!res.ok) {
-      throw new Error(`API request failed with status ${res.status}`);
+      throw new Error(
+        `${baseUrl + url} request failed with status ${res.status}`
+      );
     }
 
-    const resBody = await res.json();
+    const resBody: IApiResponse<T> = await res.json();
 
     return { data: resBody as T, ok: true };
   } catch (error) {
-    return { data: {} as T, ok: false };
+    return { data: { message: error } as T, ok: false };
   }
 };

@@ -2,7 +2,7 @@ import { CONTAINER_PADDING, GRID_CONTAINER } from "@/constants/constants";
 
 export const ArticleFallback = () => {
   return (
-    <div className="max-w-xl rounded-2xl p-4 space-y-4 animate-pulse">
+    <div className="max-w-xl rounded-md p-4 space-y-4 animate-pulse">
       <div className="w-full h-65 bg-gray-300 rounded-xl" />
 
       <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export function ArticleDetailsFallback() {
 export const HeroSectionFallback = () => {
   return (
     <div
-      className={`${CONTAINER_PADDING} bg-gray-300 rounded-md animate-pulse !py-20 mb-10`}
+      className={`${CONTAINER_PADDING} bg-gray-300 rounded-md animate-pulse h-75 mb-10`}
     ></div>
   );
 };

@@ -16,7 +16,7 @@ import { BreakingNewsBanner } from "@/components/breaking-news-banner";
 import { HeroSection } from "@/components/layout/hero-section";
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "Vercel Daily - Home",
   openGraph: {
     title: "Vercel Daily - Home",
     description: "News and insights for modern web developers.",
@@ -34,7 +34,6 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  console.log(process.env.NEXT_PUBLIC_API_BASE_URL);
   const [articles, breakingNews] = await Promise.all([
     getFeaturedArticles(),
     getBreakingNews(),

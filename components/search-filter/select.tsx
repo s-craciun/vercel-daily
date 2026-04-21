@@ -9,7 +9,7 @@ interface ISelectProps {
 export const Select: FC<ISelectProps> = ({ options, value }) => {
   return (
     <select
-      className="h-10 w-[100%] border border-gray-200 rounded-lg flex px-3"
+      className="h-10 w-[100%] border border-gray-200 rounded-md flex px-3"
       defaultValue={value}
       name="category"
     >

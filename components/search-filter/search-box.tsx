@@ -7,7 +7,7 @@ interface ISearchBoxProps {
 
 export const SearchBox: FC<ISearchBoxProps> = ({ value }) => {
   return (
-    <div className="h-10 w-[100%] border border-gray-200 rounded-lg flex">
+    <div className="h-10 w-[100%] border border-gray-200 rounded-md flex">
       <label
         htmlFor="search-articles"
         className="w-10 h-10 flex justify-center items-center"

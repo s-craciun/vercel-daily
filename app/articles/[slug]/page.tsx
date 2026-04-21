@@ -29,6 +29,7 @@ export async function generateMetadata(
 
     return {
       title: article.title,
+      description: article.excerpt,
       openGraph: {
         title: article.title,
         description: article.excerpt,
@@ -41,11 +42,13 @@ export async function generateMetadata(
             height: 150,
           },
         ],
+        type: "article",
       },
     };
   } catch {
     return {
       title: "Article not found :(",
+      description: "No article found with the provided slug.",
     };
   }
 }

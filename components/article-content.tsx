@@ -1,6 +1,6 @@
 "use client";
 
-import { BlockType } from "@/types/article-content";
+import { type ArticleContentBlock, BlockType } from "@/types/article-content";
 import { type FC } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import Image from "next/image";
@@ -30,7 +30,14 @@ interface IArticleContentProps {
 
 export const ArticleContent: FC<IArticleContentProps> = ({ article }) => {
   const { status } = useSubscriptionContext();
-  const content = status ? article.content : article.content.slice(0, 2);
+  const content = status
+    ? article.content
+    : ([
+        {
+          type: BlockType.Paragraph,
+          text: article.excerpt,
+        },
+      ] as ArticleContentBlock[]);
 
   return (
     <div className="space-y-3">
@@ -108,8 +115,8 @@ export const ArticleContent: FC<IArticleContentProps> = ({ article }) => {
         }
       })}
       {!status && (
-        <div>
-          <p className="mt-5 mb-3 text-center text-sm text-muted-foreground">
+        <div className="w-[100%] border border-gray-200 rounded-md py-10 px-10 shadow-md">
+          <p className="mb-3 text-center text-sm text-muted-foreground">
             To see the entire article, please subscribe!
           </p>
           <SubscribeForm />

@@ -9,6 +9,13 @@ import { SearchFilterForm } from "@/components/search-filter/search-filter-form"
 
 export const metadata: Metadata = {
   title: "Search",
+  description: "Find articles by keywords or categories.",
+  openGraph: {
+    title: "Vercel Daily - Search Articles",
+    description: "Find articles by keywords or categories.",
+    siteName: "Vercel Daily",
+    type: "website",
+  },
 };
 
 interface ISearchPageProps {

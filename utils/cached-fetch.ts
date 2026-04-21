@@ -45,7 +45,7 @@ export const getArticlesByParams = async (
   const {
     data: { data: articles },
   } = await ApiFetch<IApiResponse<IArticle[]>>(
-    `/articles?${query ? `?${query}` : ""}`
+    `/articles${query ? `?${query}` : ""}`
   );
   return articles;
 };
@@ -87,7 +87,7 @@ export const getArticleBySlug = cache(
 
 export const getBreakingNews = async (): Promise<IBreakingNews> => {
   cacheTag("breaking-news");
-  cacheLife("articles");
+  cacheLife({ expire: 60 });
 
   const {
     data: { data: breakingNews },
