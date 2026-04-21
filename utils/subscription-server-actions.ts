@@ -1,17 +1,13 @@
 "use server";
 
-import { API_METHODS, API_ROUTES } from "@/constants/constants";
-import { getServerApi } from "./get-server-api";
+import { SUBSCRIPTION_TOKEN_NAME } from "@/constants/constants";
+import { cookies } from "next/headers";
 
 export const checkSubscriptionStatusAction = async (): Promise<boolean> => {
   try {
-    const apiParams = await getServerApi(API_ROUTES.SUBSCRIPTION);
-    const res = await fetch(apiParams.url, {
-      method: API_METHODS.GET,
-      next: { revalidate: 10 },
-    });
-    const data = await res.json();
-    return !!data.hasToken;
+    const cookieStore = await cookies();
+    const subscriptionToken = cookieStore.get(SUBSCRIPTION_TOKEN_NAME)?.value;
+    return !!subscriptionToken;
   } catch {
     return false;
   }

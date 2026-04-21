@@ -45,7 +45,7 @@ export const SubscribeForm: FC<ISubscribeFormProps> = ({ withLabel }) => {
           </ClientButton>
         </div>
       ) : (
-        <span className="text-sm text-muted-foreground px-4 py-2 font-medium">
+        <span className="inline-flex items-center text-sm text-muted-foreground px-4 py-2 font-medium">
           Processing your subscription...
         </span>
       )}
