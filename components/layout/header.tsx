@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SubscribeForm } from "../subscribe-form";
 
-export const Header = async () => {
+export const Header = () => {
   return (
     <header
       className={`sticky top-0 z-50 border-b border-gray-200 bg-background/80 backdrop-blur-md flex flex-col md:flex-row gap-3 items-center ${CONTAINER_PADDING} !py-4`}
