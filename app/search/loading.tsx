@@ -1,0 +1,13 @@
+import { ArticlesFallback } from "@/components/layout/fallbacks";
+import { CONTAINER_PADDING } from "@/constants/constants";
+import { SearchFilterForm } from "@/components/search-filter/search-filter-form";
+
+export default function SearchLoading() {
+  return (
+    <section className={CONTAINER_PADDING}>
+      <h1 className="text-3xl font-bold mb-4">Search Articles</h1>
+      <SearchFilterForm categories={[]} />
+      <ArticlesFallback />
+    </section>
+  );
+}
