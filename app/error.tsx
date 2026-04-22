@@ -30,8 +30,8 @@ export default function Error({
         </div>
 
         <p className="text-center text-muted-foreground">
-          An unexpected error has occurred. Our team has been notified. Please
-          try again.
+          An unexpected error has occurred trying to load thia page. Our team
+          has been notified. Please try again.
         </p>
 
         {process.env.NODE_ENV === "development" && error && (
