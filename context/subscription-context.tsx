@@ -18,14 +18,18 @@ import {
 interface ISubscriptionContext {
   status: boolean;
   loading: boolean;
+  error: string | null;
   setLoading: Dispatch<SetStateAction<boolean>>;
+  setError: Dispatch<SetStateAction<string | null>>;
   checkSubscriptionStatus: () => void;
 }
 
 const SubscriptionContext = createContext<ISubscriptionContext>({
   status: false,
   loading: false,
+  error: null,
   setLoading: () => {},
+  setError: () => {},
   checkSubscriptionStatus: () => {},
 });
 
@@ -33,6 +37,7 @@ export const SubscriptionContextProvider: FC<PropsWithChildren> = memo(
   function Provider({ children }) {
     const [status, setStatus] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const checkSubscriptionStatus = useCallback(async () => {
       try {
@@ -57,10 +62,12 @@ export const SubscriptionContextProvider: FC<PropsWithChildren> = memo(
       return {
         status,
         loading,
+        error,
         setLoading,
+        setError,
         checkSubscriptionStatus,
       };
-    }, [status, loading, checkSubscriptionStatus]);
+    }, [status, loading, error, checkSubscriptionStatus]);
 
     return (
       <SubscriptionContext.Provider value={value}>

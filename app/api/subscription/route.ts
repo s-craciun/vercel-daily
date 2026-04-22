@@ -33,24 +33,36 @@ export async function GET() {
       success: !!subscriptionToken,
       hasToken: !!subscriptionToken,
     },
-    { status: 200 }
+    { status: 200 },
   );
 }
 
 export async function POST() {
-  const {
-    data: { data: subscriptionToken },
-  } = await ApiFetch<IApiResponse<ISubscription>>(
+  const result = await ApiFetch<IApiResponse<ISubscription>>(
     API_ROUTES.CREATE_SUBSCRIPTION,
     null,
     {
       method: API_METHODS.POST,
-    }
+    },
   );
+
+  if (!result.ok) {
+    return NextResponse.json({
+      success: false,
+      error: "Failed to create subscription",
+    });
+  }
+
+  const {
+    data: { data: subscriptionToken },
+  } = result;
   const { token } = subscriptionToken || {};
 
   if (!token) {
-    return NextResponse.json({ success: false });
+    return NextResponse.json({
+      success: false,
+      error: "No token received from API",
+    });
   }
 
   await activateCheckSubscription(token);

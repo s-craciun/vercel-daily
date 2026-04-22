@@ -14,35 +14,55 @@ interface ISubscribeFormProps {
 }
 
 export const SubscribeForm: FC<ISubscribeFormProps> = ({ withLabel }) => {
-  const { status, loading, setLoading, checkSubscriptionStatus } =
-    useSubscriptionContext();
+  const {
+    status,
+    loading,
+    error,
+    setLoading,
+    setError,
+    checkSubscriptionStatus,
+  } = useSubscriptionContext();
 
-  const handleSubscriptionToggle = useCallback(() => {
+  const handleSubscriptionToggle = useCallback(async () => {
     setLoading(true);
-
-    if (status) {
-      deactivateSubscription(checkSubscriptionStatus);
-    } else {
-      createSubscription(checkSubscriptionStatus);
+    setError(null);
+    try {
+      if (status) {
+        await deactivateSubscription(checkSubscriptionStatus);
+      } else {
+        await createSubscription(checkSubscriptionStatus);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setLoading(false);
     }
-  }, [status, setLoading, checkSubscriptionStatus]);
+  }, [status, setLoading, setError, checkSubscriptionStatus]);
 
   return (
     <div>
       {!loading ? (
-        <div className="flex justify-center items-center gap-5">
-          {withLabel && (
-            <span className="text-sm text-muted-foreground">
-              {status ? "You are subscribed!" : "You are not subscribed yet!"}
-            </span>
-          )}
-          <ClientButton
-            type="submit"
-            variant={status ? ButtonVariants.OUTLINE : ButtonVariants.DEFAULT}
-            onClick={handleSubscriptionToggle}
-          >
-            {status ? "Unsubscribe" : "Subscribe"}
-          </ClientButton>
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex justify-center items-center gap-5">
+            {withLabel && (
+              <span className="text-sm text-muted-foreground">
+                {error ? (
+                  <span className="text-sm text-red-500">{error}</span>
+                ) : status ? (
+                  "You are subscribed!"
+                ) : (
+                  "You are not subscribed yet!"
+                )}
+              </span>
+            )}
+            <ClientButton
+              type="submit"
+              variant={status ? ButtonVariants.OUTLINE : ButtonVariants.DEFAULT}
+              onClick={handleSubscriptionToggle}
+            >
+              {status ? "Unsubscribe" : "Subscribe"}
+            </ClientButton>
+          </div>
         </div>
       ) : (
         <span className="inline-flex items-center text-sm text-muted-foreground px-4 py-2 font-medium">

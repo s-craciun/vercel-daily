@@ -4,7 +4,7 @@ import { type IApiResponse } from "@/types/types";
 export const ApiFetch = async <T>(
   url: string,
   reqBody?: Record<string, unknown> | null,
-  params?: Parameters<typeof fetch>[1]
+  params?: Parameters<typeof fetch>[1],
 ) => {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -17,7 +17,7 @@ export const ApiFetch = async <T>(
 
     if (!bypass) {
       throw new Error(
-        "Vercel protection bypass token is not defined in environment variables"
+        "Vercel protection bypass token is not defined in environment variables",
       );
     }
 
@@ -32,26 +32,66 @@ export const ApiFetch = async <T>(
 
     if (reqBody) {
       finalParams.body = JSON.stringify(reqBody);
+      finalParams.headers = {
+        ...finalParams.headers,
+        "Content-Type": "application/json",
+      };
     }
 
-    const res = await fetch(baseUrl + url, {
-      ...finalParams,
-      headers: {
-        ...baseParams.headers,
-        ...finalParams.headers,
-      },
-    });
-
-    if (!res.ok) {
+    let res: Response;
+    try {
+      res = await fetch(baseUrl + url, {
+        ...finalParams,
+        headers: {
+          ...baseParams.headers,
+          ...finalParams.headers,
+        },
+      });
+    } catch (fetchError) {
       throw new Error(
-        `${baseUrl + url} request failed with status ${res.status}`
+        `Network error while fetching ${url}: ${fetchError instanceof Error ? fetchError.message : "Unknown network error"}`,
       );
     }
 
-    const resBody: IApiResponse<T> = await res.json();
+    if (!res.ok) {
+      let errorMessage = `HTTP ${res.status}: ${res.statusText}`;
+      try {
+        const errorData = await res.json();
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        } else if (errorData.error?.message) {
+          errorMessage = errorData.error.message;
+        }
+      } catch (jsonError) {
+        // If JSON parsing fails, use the status text
+        console.warn(
+          `Failed to parse error response JSON for ${url}:`,
+          jsonError,
+        );
+      }
+      throw new Error(errorMessage);
+    }
+
+    let resBody: IApiResponse<T>;
+    try {
+      resBody = await res.json();
+    } catch (jsonError) {
+      throw new Error(
+        `Failed to parse JSON response from ${url}: ${jsonError instanceof Error ? jsonError.message : "Invalid JSON"}`,
+      );
+    }
+
+    if (!resBody.success) {
+      const errorMsg = resBody.error?.message || "API request failed";
+      throw new Error(errorMsg);
+    }
 
     return { data: resBody as T, ok: true };
   } catch (error) {
-    return { data: { message: error } as T, ok: false };
+    console.error(`[ApiFetch] Error fetching ${url}:`, error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Unknown API error");
   }
 };

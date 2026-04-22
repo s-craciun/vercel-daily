@@ -5,7 +5,7 @@ import { ButtonVariants } from "@/constants/constants";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function ArticleDetailError({
+export default function SearchError({
   error,
   reset,
 }: {
@@ -15,15 +15,11 @@ export default function ArticleDetailError({
   const router = useRouter();
 
   useEffect(() => {
-    console.error("[Article Detail Error Boundary]", error);
+    console.error("[Search Page Error Boundary]", error);
   }, [error]);
 
   const handleRetry = () => {
     reset();
-  };
-
-  const handleGoBack = () => {
-    router.back();
   };
 
   const handleHome = () => {
@@ -36,13 +32,13 @@ export default function ArticleDetailError({
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-2">Oops!</h1>
           <h2 className="text-2xl font-semibold text-muted-foreground mb-4">
-            Failed to load article
+            Search error
           </h2>
         </div>
 
         <p className="text-center text-muted-foreground">
-          We couldn&#39;t load the article data. This might be a temporary
-          issue. Please try again or browse other articles.
+          We encountered an error while processing your search. Please try again
+          or return to the home page.
         </p>
 
         {process.env.NODE_ENV === "development" && error && (
@@ -69,17 +65,10 @@ export default function ArticleDetailError({
           >
             Try Again
           </ClientButton>
-          <ClientButton onClick={handleGoBack} className="flex-1">
-            Go Back
+          <ClientButton onClick={handleHome} className="flex-1">
+            Go Home
           </ClientButton>
         </div>
-        <ClientButton
-          onClick={handleHome}
-          variant={ButtonVariants.OUTLINE}
-          className="w-full"
-        >
-          Go to Home Page
-        </ClientButton>
       </div>
     </section>
   );
