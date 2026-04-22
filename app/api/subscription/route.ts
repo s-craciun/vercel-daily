@@ -19,7 +19,7 @@ const activateCheckSubscription = async (token: string) => {
   cookieStore.set(SUBSCRIPTION_TOKEN_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "lax",
     maxAge: 84600,
   });
 };
@@ -38,50 +38,66 @@ export async function GET() {
 }
 
 export async function POST() {
-  const result = await ApiFetch<IApiResponse<ISubscription>>(
-    API_ROUTES.CREATE_SUBSCRIPTION,
-    null,
-    {
-      method: API_METHODS.POST,
-    },
-  );
+  try {
+    const result = await ApiFetch<IApiResponse<ISubscription>>(
+      API_ROUTES.CREATE_SUBSCRIPTION,
+      null,
+      {
+        method: API_METHODS.POST,
+      },
+    );
 
-  if (!result.ok) {
-    return NextResponse.json({
-      success: false,
-      error: "Failed to create subscription",
-    });
+    const {
+      data: { data: subscriptionToken },
+    } = result;
+    const { token } = subscriptionToken || {};
+
+    if (!token) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "No token received from API",
+        },
+        { status: 400 },
+      );
+    }
+
+    await activateCheckSubscription(token);
+
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Internal server error",
+      },
+      { status: 500 },
+    );
   }
-
-  const {
-    data: { data: subscriptionToken },
-  } = result;
-  const { token } = subscriptionToken || {};
-
-  if (!token) {
-    return NextResponse.json({
-      success: false,
-      error: "No token received from API",
-    });
-  }
-
-  await activateCheckSubscription(token);
-
-  return NextResponse.json({ success: true });
 }
 
 export async function DELETE() {
-  const cookieStore = await cookies();
-  const subscriptionToken = cookieStore.get(SUBSCRIPTION_TOKEN_NAME)?.value;
+  try {
+    const cookieStore = await cookies();
+    const subscriptionToken = cookieStore.get(SUBSCRIPTION_TOKEN_NAME)?.value;
 
-  if (subscriptionToken) {
-    await ApiFetch<IApiResponse<ISubscription>>(API_ROUTES.SUBSCRIPTION, null, {
-      headers: { "x-subscription-token": subscriptionToken },
-      method: API_METHODS.DELETE,
-    });
+    if (subscriptionToken) {
+      await ApiFetch<IApiResponse<ISubscription>>(API_ROUTES.SUBSCRIPTION, null, {
+        headers: { "x-subscription-token": subscriptionToken },
+        method: API_METHODS.DELETE,
+      });
+    }
+
+    cookieStore.delete(SUBSCRIPTION_TOKEN_NAME);
+
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to delete subscription",
+      },
+      { status: 500 },
+    );
   }
-
-  cookieStore.delete(SUBSCRIPTION_TOKEN_NAME);
-
-  return NextResponse.json({ success: true });
 }

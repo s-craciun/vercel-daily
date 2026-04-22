@@ -25,11 +25,16 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(
   { params }: IArticleDetailsPageProps,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   try {
     const { slug } = await params;
     const article = await getArticleBySlug(slug);
+    if (!article) {
+      return {
+        title: "Article not found :(",
+      };
+    }
     const previousImages = (await parent).openGraph?.images || [];
 
     return {
@@ -62,7 +67,12 @@ export default async function ArticleDetailsPage({
   params,
 }: IArticleDetailsPageProps) {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+  let article;
+  try {
+    article = await getArticleBySlug(slug);
+  } catch (error) {
+    notFound();
+  }
 
   if (!article) {
     notFound();
