@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
-export const applySearchFilters = (formData: FormData) => {
+export const applySearchFilters = async (formData: FormData) => {
+  "use server";
   const search = formData.get("search")?.toString().trim() || "";
   const category = formData.get("category")?.toString() || "all";
 

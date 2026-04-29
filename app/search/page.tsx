@@ -1,4 +1,3 @@
-import { getCategories } from "@/utils/cached-fetch";
 import { CONTAINER_PADDING } from "@/constants/constants";
 import { type Metadata } from "next";
 import { ArticlesFallback } from "@/components/layout/fallbacks";
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
   },
 };
 
-interface ISearchPageProps {
+export interface ISearchPageProps {
   searchParams: Promise<{
     search?: string;
     category?: string;
@@ -25,19 +24,14 @@ interface ISearchPageProps {
 }
 
 export default async function SearchPage({ searchParams }: ISearchPageProps) {
-  const { search, category } = await searchParams;
-  const categories = await getCategories();
-
   return (
     <section className={CONTAINER_PADDING}>
       <h1 className="text-3xl font-bold mb-4">Search Articles</h1>
-      <SearchFilterForm
-        initialSearch={search}
-        initialCategory={category}
-        categories={categories}
-      />
       <Suspense fallback={<ArticlesFallback />}>
-        <SearchResults search={search} category={category} />
+        <SearchFilterForm searchParams={searchParams} />
+      </Suspense>
+      <Suspense fallback={<ArticlesFallback />}>
+        <SearchResults searchParams={searchParams} />
       </Suspense>
     </section>
   );

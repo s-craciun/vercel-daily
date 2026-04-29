@@ -11,9 +11,9 @@ export const getAllArticles = async (): Promise<IArticle[]> => {
   cacheLife("articles");
 
   try {
-    const {
-      data: { data: articles },
-    } = await ApiFetch<IApiResponse<IArticle[]>>(API_ROUTES.ARTICLES);
+    const { data: articles } = await ApiFetch<IApiResponse<IArticle[]>>(
+      API_ROUTES.ARTICLES,
+    );
     return articles;
   } catch {
     return [];
@@ -47,9 +47,7 @@ export const getArticlesByParams = async (
   cacheLife("articles");
 
   try {
-    const {
-      data: { data: articles },
-    } = await ApiFetch<IApiResponse<IArticle[]>>(
+    const { data: articles } = await ApiFetch<IApiResponse<IArticle[]>>(
       `${API_ROUTES.ARTICLES}${query ? `?${query}` : ""}`,
     );
     return articles;
@@ -63,9 +61,9 @@ export const getFeaturedArticles = async (): Promise<IArticle[]> => {
   cacheLife("articles");
 
   try {
-    const {
-      data: { data: articles },
-    } = await ApiFetch<IApiResponse<IArticle[]>>(API_ROUTES.FEATURED);
+    const { data: articles } = await ApiFetch<IApiResponse<IArticle[]>>(
+      API_ROUTES.FEATURED,
+    );
     return articles;
   } catch {
     return [];
@@ -77,9 +75,9 @@ export const getTrendingArticles = async (): Promise<IArticle[]> => {
   cacheLife("articles");
 
   try {
-    const {
-      data: { data: articles },
-    } = await ApiFetch<IApiResponse<IArticle[]>>(API_ROUTES.TRENDING);
+    const { data: articles } = await ApiFetch<IApiResponse<IArticle[]>>(
+      API_ROUTES.TRENDING,
+    );
     return articles;
   } catch {
     return [];
@@ -90,14 +88,9 @@ export const getArticleBySlug = async (slug: string): Promise<IArticle> => {
   cacheTag(CACHE_TAGS.ARTICLE, `${CACHE_TAGS.ARTICLE}-${slug}`);
   cacheLife("articles");
 
-  const {
-    data: { data: article },
-  } = await ApiFetch<IApiResponse<IArticle>>(
+  const { data: article } = await ApiFetch<IApiResponse<IArticle>>(
     `${API_ROUTES.ARTICLES}/${slug}`,
     null,
-    {
-      next: { revalidate: 60 },
-    },
   );
   return article;
 };
@@ -107,9 +100,9 @@ export const getBreakingNews = async (): Promise<IBreakingNews | null> => {
   cacheLife({ expire: 60 });
 
   try {
-    const {
-      data: { data: breakingNews },
-    } = await ApiFetch<IApiResponse<IBreakingNews>>(API_ROUTES.BREAKING_NEWS);
+    const { data: breakingNews } = await ApiFetch<IApiResponse<IBreakingNews>>(
+      API_ROUTES.BREAKING_NEWS,
+    );
     return breakingNews;
   } catch {
     return null;
@@ -121,9 +114,9 @@ export const getCategories = async (): Promise<ICategory[]> => {
   cacheLife("categories");
 
   try {
-    const {
-      data: { data: categories },
-    } = await ApiFetch<IApiResponse<ICategory[]>>(API_ROUTES.CATEGORIES);
+    const { data: categories } = await ApiFetch<IApiResponse<ICategory[]>>(
+      API_ROUTES.CATEGORIES,
+    );
     return categories;
   } catch {
     return [];

@@ -1,20 +1,11 @@
-import { API_METHODS, API_ROUTES } from "../constants/constants";
-import { getServerApi } from "./get-server-api";
+import {
+  createSubscriptionAction,
+  deactivateSubscriptionAction,
+} from "./subscription-server-actions";
 
 export const createSubscription = async (callback?: () => void) => {
   try {
-    const apiParams = await getServerApi(API_ROUTES.SUBSCRIPTION);
-    const response = await fetch(apiParams.url, { method: API_METHODS.POST });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: Failed to create subscription`);
-    }
-
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.error || "Failed to create subscription");
-    }
+    await createSubscriptionAction();
 
     if (callback) {
       callback();
@@ -29,20 +20,7 @@ export const createSubscription = async (callback?: () => void) => {
 
 export const deactivateSubscription = async (callback?: () => void) => {
   try {
-    const apiParams = await getServerApi(API_ROUTES.SUBSCRIPTION);
-    const response = await fetch(apiParams.url, { method: API_METHODS.DELETE });
-
-    if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}: Failed to deactivate subscription`
-      );
-    }
-
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.error || "Failed to deactivate subscription");
-    }
+    await deactivateSubscriptionAction();
 
     if (callback) {
       callback();
