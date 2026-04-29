@@ -22,14 +22,16 @@ export const HeroSection = () => {
           <Button href="/articles">Browse Articles</Button>
         </div>
       </div>
-      <Image
-        className="rounded-md"
-        src="/hero-daily-news.webp"
-        alt="Laptop"
-        height={300}
-        width={600}
-        preload
-      />
+      <div className="relative w-120 h-80">
+        <Image
+          className="rounded-md mx-auto"
+          src="/hero-daily-news.webp"
+          alt="Laptop"
+          fill
+          sizes="(max-width: 540px) 100vw, 60vw"
+          preload
+        />
+      </div>
     </section>
   );
 };

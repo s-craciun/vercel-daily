@@ -1,17 +1,29 @@
-import { BlockType } from "@/types/article-content";
+import { type ArticleContentBlock, BlockType } from "@/types/article-content";
 import ReactMarkdown from "react-markdown";
 import Image from "next/image";
 import { type IArticle } from "@/types/article";
 import { MarkdownComponents } from "@/app/articles/[slug]/page";
+import { SubscribeForm } from "../subscribe-form";
 
 interface IArticleContentProps {
   article: IArticle;
 }
 
-export const ArticleContent = ({ article }: IArticleContentProps) => {
+export const ArticleContent = ({
+  article,
+  isSubscribed,
+}: IArticleContentProps & { isSubscribed: boolean }) => {
+  const content = isSubscribed
+    ? article.content
+    : ([
+        {
+          type: BlockType.Paragraph,
+          text: article.excerpt || "Subscribe to read the full article!",
+        },
+      ] as ArticleContentBlock[]);
   return (
     <div className="space-y-3">
-      {article.content?.map((block, i) => {
+      {content?.map((block, i) => {
         switch (block.type) {
           case BlockType.Paragraph:
             return (
@@ -66,15 +78,17 @@ export const ArticleContent = ({ article }: IArticleContentProps) => {
             );
           case BlockType.Image:
             return (
-              <figure key={i}>
-                <Image
-                  src={block.src || `/${article.slug}-img-${i}`}
-                  alt={block.alt || `/${article.title} image ${i}`}
-                  width={600}
-                  height={400}
-                />
+              <figure key={i} className="my-4">
+                <div className="relative w-full h-65">
+                  <Image
+                    src={block.src || `/${article.slug}-img-${i}`}
+                    alt={block.alt || `/${article.title} image ${i}`}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
                 {block.caption && (
-                  <figcaption>
+                  <figcaption className="text-sm text-muted-foreground mt-2 text-center">
                     <ReactMarkdown components={MarkdownComponents}>
                       {block.caption}
                     </ReactMarkdown>
@@ -84,6 +98,14 @@ export const ArticleContent = ({ article }: IArticleContentProps) => {
             );
         }
       })}
+      {!isSubscribed && (
+        <div className="w-[100%] border border-gray-200 rounded-md py-10 px-10 shadow-md mb-10">
+          <p className="mb-3 text-center text-sm text-muted-foreground">
+            To read the full article, subscribe now.
+          </p>
+          <SubscribeForm isSubscribed={false} />
+        </div>
+      )}
     </div>
   );
 };

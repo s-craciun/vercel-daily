@@ -1,9 +1,13 @@
 import { CONTAINER_PADDING } from "@/constants/constants";
 import { type Metadata } from "next";
-import { ArticlesFallback } from "@/components/layout/fallbacks";
+import {
+  ArticlesFallback,
+  SearchFilterFormFallback,
+} from "@/components/layout/fallbacks";
 import { Suspense } from "react";
 import { SearchFilterForm } from "@/components/search-filter/search-filter-form";
 import { SearchResults } from "@/components/search-filter/search-results";
+import { getCategories } from "@/utils/cached-fetch";
 
 export const metadata: Metadata = {
   title: "Search",
@@ -23,16 +27,45 @@ export interface ISearchPageProps {
   }>;
 }
 
-export default async function SearchPage({ searchParams }: ISearchPageProps) {
+async function SearchFilterFormWrapper({
+  search,
+  category,
+}: {
+  search?: string;
+  category?: string;
+}) {
+  const categories = await getCategories();
+  return (
+    <SearchFilterForm
+      search={search}
+      category={category}
+      categories={categories}
+    />
+  );
+}
+
+export default function SearchPage({ searchParams }: ISearchPageProps) {
   return (
     <section className={CONTAINER_PADDING}>
       <h1 className="text-3xl font-bold mb-4">Search Articles</h1>
-      <Suspense fallback={<ArticlesFallback />}>
-        <SearchFilterForm searchParams={searchParams} />
+      <Suspense fallback={<SearchFilterFormFallback />}>
+        <SearchPageContent searchParams={searchParams} />
+      </Suspense>
+    </section>
+  );
+}
+
+async function SearchPageContent({ searchParams }: ISearchPageProps) {
+  const { search, category } = await searchParams;
+
+  return (
+    <>
+      <Suspense fallback={<SearchFilterFormFallback />}>
+        <SearchFilterFormWrapper search={search} category={category} />
       </Suspense>
       <Suspense fallback={<ArticlesFallback />}>
         <SearchResults searchParams={searchParams} />
       </Suspense>
-    </section>
+    </>
   );
 }

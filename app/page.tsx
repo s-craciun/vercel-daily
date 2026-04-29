@@ -4,7 +4,7 @@ import { HeroSection } from "@/components/layout/hero-section";
 import { Suspense } from "react";
 import {
   BreakingNewsFallback,
-  FeaturedSectionFallback,
+  SpecificArticleSectionFallback,
 } from "@/components/layout/fallbacks";
 import { FeaturedArticles } from "@/components/articles/featured-articles";
 
@@ -33,7 +33,7 @@ export default async function HomePage() {
         <BreakingNewsBanner />
       </Suspense>
       <HeroSection />
-      <Suspense fallback={<FeaturedSectionFallback />}>
+      <Suspense fallback={<SpecificArticleSectionFallback withPadding />}>
         <FeaturedArticles />
       </Suspense>
     </section>

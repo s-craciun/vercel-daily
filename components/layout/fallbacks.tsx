@@ -1,5 +1,27 @@
 import { CONTAINER_PADDING, GRID_CONTAINER } from "@/constants/constants";
 
+export const HeaderFallback = () => {
+  return (
+    <header
+      className={`sticky top-0 z-50 border-b border-gray-200 bg-background/80 backdrop-blur-md flex flex-col md:flex-row gap-3 items-center ${CONTAINER_PADDING} !py-4`}
+    >
+      <div className="flex gap-8">
+        <div className="flex flex-row items-center gap-2">
+          <div className="w-5 h-5 bg-gray-300 rounded" />
+          <div className="h-5 w-24 bg-gray-300 rounded" />
+        </div>
+        <nav className="flex flex-row items-center gap-8">
+          <div className="h-4 w-8 bg-gray-300 rounded" />
+          <div className="h-4 w-12 bg-gray-300 rounded" />
+        </nav>
+      </div>
+      <div className="md:ml-auto">
+        <div className="h-8 w-24 bg-gray-300 rounded" />
+      </div>
+    </header>
+  );
+};
+
 export const ArticleFallback = () => {
   return (
     <div className="animate-pulse">
@@ -23,15 +45,18 @@ export const ArticleFallback = () => {
   );
 };
 
-export const FeaturedSectionFallback = () => {
+export const SpecificArticleSectionFallback = ({
+  withPadding = false,
+}: {
+  withPadding?: boolean;
+}) => {
   return (
-    <section className={CONTAINER_PADDING}>
+    <section className={withPadding ? CONTAINER_PADDING : ""}>
       <div className="flex justify-between items-start mb-6 animate-pulse">
         <div>
           <div className="h-7 w-32 bg-gray-300 rounded-md mb-1" />
           <div className="h-4 w-48 bg-gray-300 rounded-md" />
         </div>
-        <div className="h-10 w-20 bg-gray-300 rounded-md" />
       </div>
 
       <ArticlesFallback />
@@ -51,45 +76,32 @@ export const ArticlesFallback = () => {
 
 export function ArticleDetailsFallback() {
   return (
-    <div className="animate-pulse space-y-3">
+    <article className="mb-10 animate-pulse">
+      <div className="md:flex justify-between gap-4 mb-4">
+        <div className="flex-1">
+          <div className="h-8 w-3/4 bg-gray-300 rounded mb-1" />
+          <div className="h-4 w-32 bg-gray-300 rounded" />
+        </div>
+        <div className="text-muted-foreground">
+          <div className="h-4 w-28 bg-gray-300 rounded" />
+        </div>
+      </div>
+
+      <div className="relative w-[60vw] h-96 mx-auto mb-6">
+        <div className="w-full h-full bg-gray-300 rounded-lg" />
+      </div>
+
       <div className="space-y-3">
-        <div className="h-8 w-3/4 bg-gray-300 rounded" />
-        <div className="h-8 w-2/3 bg-gray-300 rounded" />
-      </div>
-
-      <div className="flex justify-between items-center">
-        <div className="h-4 w-32 bg-gray-300 rounded" />
-        <div className="h-4 w-28 bg-gray-300 rounded" />
-      </div>
-
-      <div className="h-3 w-24 bg-gray-300 rounded" />
-
-      <div className="w-full h-[360px] bg-gray-300 rounded-2xl" />
-
-      <div className="space-y-3 pt-4">
         <div className="h-4 w-full bg-gray-300 rounded" />
         <div className="h-4 w-full bg-gray-300 rounded" />
         <div className="h-4 w-5/6 bg-gray-300 rounded" />
         <div className="h-4 w-4/6 bg-gray-300 rounded" />
-      </div>
-
-      <div className="space-y-3 pt-4">
+        <div className="h-4 w-full bg-gray-300 rounded" />
         <div className="h-4 w-3/4 bg-gray-300 rounded" />
-        <div className="h-4 w-2/3 bg-gray-300 rounded" />
-        <div className="h-4 w-3/5 bg-gray-300 rounded" />
-        <div className="h-4 w-2/3 bg-gray-300 rounded" />
       </div>
-    </div>
+    </article>
   );
 }
-
-export const HeroSectionFallback = () => {
-  return (
-    <div
-      className={`${CONTAINER_PADDING} bg-gray-300 rounded-md animate-pulse h-75 mb-10`}
-    ></div>
-  );
-};
 
 export const BreakingNewsFallback = () => {
   return (
@@ -102,20 +114,16 @@ export const BreakingNewsFallback = () => {
   );
 };
 
-export const TitleFallback = () => {
-  return <div className="h-9 w-64 bg-gray-300 rounded-md animate-pulse mb-4" />;
-};
-
 export const SearchFilterFormFallback = () => {
   return (
     <form className="mb-10 animate-pulse">
       <div className="flex flex-col md:flex-row items-center gap-5 mb-5">
-        <div className="h-10 w-full border border-gray-200 rounded-md bg-gray-100" />
+        <div className="h-10 w-full rounded-md bg-gray-300" />
         <div className="w-[100%] md:w-[20%]">
-          <div className="h-10 w-full border border-gray-200 rounded-md bg-gray-100" />
+          <div className="h-10 w-full rounded-md bg-gray-300" />
         </div>
       </div>
-      <div className="h-10 w-32 border border-gray-200 rounded-md bg-gray-100" />
+      <div className="h-10 w-32 rounded-md bg-gray-300" />
     </form>
   );
 };

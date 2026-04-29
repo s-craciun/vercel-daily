@@ -26,9 +26,23 @@ export const ApiFetch = async <T>(
         "x-vercel-protection-bypass": bypass,
       },
       method: API_METHODS.GET,
+      next: {
+        revalidate: 60,
+      },
     };
 
-    const finalParams = { ...baseParams, ...(params || {}) };
+    const finalParams = {
+      ...baseParams,
+      ...(params || {}),
+      headers: {
+        ...baseParams.headers,
+        ...(params?.headers || {}),
+      },
+      next: {
+        ...baseParams.next,
+        ...(params?.next || {}),
+      },
+    };
 
     if (reqBody) {
       finalParams.body = JSON.stringify(reqBody);

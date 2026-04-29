@@ -6,7 +6,7 @@ import {
   SUBSCRIPTION_COOKIE_NAME,
 } from "@/constants/constants";
 import { ApiFetch } from "@/lib/api-fetch";
-import { type ISubscription } from "@/types/subscription";
+import { type ISubscription } from "./subscription";
 import { type IApiResponse } from "@/types/types";
 import { cookies } from "next/headers";
 
@@ -80,18 +80,21 @@ export const deactivateSubscriptionAction = async (): Promise<boolean> => {
 };
 
 export const toggleSubscriptionFormAction = async (): Promise<{
+  status?: boolean;
   error?: string;
 }> => {
   try {
     const isSubscribed = await checkSubscriptionStatus();
 
+    let status;
+
     if (isSubscribed) {
-      await deactivateSubscriptionAction();
+      status = await deactivateSubscriptionAction();
     } else {
-      await createSubscriptionAction();
+      status = await createSubscriptionAction();
     }
 
-    return {};
+    return { status: !!status };
   } catch (error) {
     return {
       error:

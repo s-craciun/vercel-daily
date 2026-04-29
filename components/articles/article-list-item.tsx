@@ -13,13 +13,15 @@ export const ArticleListItem: FC<IArticleListItemProps> = ({ article }) => {
   return (
     <Link key={article.id} href={`/articles/${article.slug ?? article.id}`}>
       <article>
-        <Image
-          className="w-full border border-gray-200 rounded-lg object-cover mb-2 h-65"
-          src={article.image}
-          alt={article.title}
-          width={300}
-          height={120}
-        />
+        <div className="relative w-full h-65 mb-2">
+          <Image
+            className="rounded-lg object-cover"
+            src={article.image}
+            alt={article.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        </div>
         <span className="leading-relaxed text-muted-foreground text-sm">
           {formatArticleCategory(article.category)}
           <span className="mx-2">{DOT}</span>

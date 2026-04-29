@@ -5,15 +5,15 @@ import { SUBSCRIPTION_COOKIE_NAME } from "./constants/constants";
 export function proxy(req: NextRequest) {
   const token = req.cookies.get(SUBSCRIPTION_COOKIE_NAME)?.value;
 
-  const isArticlePage = req.nextUrl.pathname.startsWith("/articles/");
+  if (token) {
+    const headers = new Headers(req.headers);
+    headers.set("x-daily-news-subscriber", token);
 
-  if (!isArticlePage) return NextResponse.next();
-
-  if (!token) {
-    const url = req.nextUrl.clone();
-    url.pathname = `/articles/preview${req.nextUrl.pathname.replace("/articles", "")}`;
-
-    return NextResponse.rewrite(url);
+    return NextResponse.next({
+      request: {
+        headers,
+      },
+    });
   }
 
   return NextResponse.next();

@@ -1,10 +1,9 @@
 "use client";
 
-import { toggleSubscriptionFormAction } from "@/utils/subscription-server-actions";
+import { toggleSubscriptionFormAction } from "@/lib/subscription";
 import { ButtonVariants } from "@/constants/constants";
 import { useActionState } from "react";
 import { ClientButton } from "./button/client-button";
-import { useRouter } from "next/navigation";
 
 interface ISubscribeFormProps {
   withLabel?: boolean;
@@ -15,21 +14,15 @@ export const SubscribeForm = ({
   withLabel,
   isSubscribed,
 }: ISubscribeFormProps) => {
-  const router = useRouter();
   const [{ error }, formAction, isPending] = useActionState(
     toggleSubscriptionFormAction,
     {},
   );
 
   return (
-    <form
-      action={() => {
-        formAction();
-        router.refresh();
-      }}
-    >
-      {!isPending ? (
-        <div className="flex flex-col items-center gap-2">
+    <form action={formAction}>
+      <div className="flex flex-col items-center gap-2">
+        {!isPending ? (
           <div className="flex justify-center items-center gap-5">
             {withLabel && (
               <span className="text-sm text-muted-foreground">
@@ -51,12 +44,12 @@ export const SubscribeForm = ({
               {isSubscribed ? "Unsubscribe" : "Subscribe"}
             </ClientButton>
           </div>
-        </div>
-      ) : (
-        <span className="inline-flex items-center text-sm text-muted-foreground px-4 py-2 font-medium">
-          Processing your subscription...
-        </span>
-      )}
+        ) : (
+          <span className="inline-flex items-center text-sm text-muted-foreground px-4 py-2 font-medium">
+            Processing your subscription...
+          </span>
+        )}
+      </div>
     </form>
   );
 };
