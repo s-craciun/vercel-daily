@@ -1,47 +1,17 @@
-"use client";
-
-import { type ArticleContentBlock, BlockType } from "@/types/article-content";
-import { type FC } from "react";
-import ReactMarkdown, { type Components } from "react-markdown";
+import { BlockType } from "@/types/article-content";
+import ReactMarkdown from "react-markdown";
 import Image from "next/image";
 import { type IArticle } from "@/types/article";
-import { useSubscriptionContext } from "@/context/subscription-context";
-import { SubscribeForm } from "../subscribe-form";
-
-const MarkdownComponents: Components = {
-  p: ({ children }) => (
-    <p className="leading-relaxed text-muted-foreground text-sm">{children}</p>
-  ),
-  a: ({ children, href }) => (
-    <a
-      className="underline"
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
-    </a>
-  ),
-};
+import { MarkdownComponents } from "@/app/articles/[slug]/page";
 
 interface IArticleContentProps {
   article: IArticle;
 }
 
-export const ArticleContent: FC<IArticleContentProps> = ({ article }) => {
-  const { status } = useSubscriptionContext();
-  const content = status
-    ? article.content
-    : ([
-        {
-          type: BlockType.Paragraph,
-          text: article.excerpt,
-        },
-      ] as ArticleContentBlock[]);
-
+export const ArticleContent = ({ article }: IArticleContentProps) => {
   return (
     <div className="space-y-3">
-      {content.map((block, i) => {
+      {article.content?.map((block, i) => {
         switch (block.type) {
           case BlockType.Paragraph:
             return (
@@ -114,14 +84,6 @@ export const ArticleContent: FC<IArticleContentProps> = ({ article }) => {
             );
         }
       })}
-      {!status && (
-        <div className="w-[100%] border border-gray-200 rounded-md py-10 px-10 shadow-md">
-          <p className="mb-3 text-center text-sm text-muted-foreground">
-            To see the entire article, please subscribe!
-          </p>
-          <SubscribeForm />
-        </div>
-      )}
     </div>
   );
 };

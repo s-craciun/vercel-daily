@@ -2,8 +2,11 @@ import { CONTAINER_PADDING } from "@/constants/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { SubscribeForm } from "../subscribe-form";
+import { checkSubscriptionStatus } from "@/utils/subscription-server-actions";
 
-export const Header = () => {
+export const Header = async () => {
+  const isSubscribed = await checkSubscriptionStatus();
+
   return (
     <header
       className={`sticky top-0 z-50 border-b border-gray-200 bg-background/80 backdrop-blur-md flex flex-col md:flex-row gap-3 items-center ${CONTAINER_PADDING} !py-4`}
@@ -25,7 +28,7 @@ export const Header = () => {
         </nav>
       </div>
       <div className="md:ml-auto">
-        <SubscribeForm withLabel />
+        <SubscribeForm withLabel isSubscribed={isSubscribed} />
       </div>
     </header>
   );

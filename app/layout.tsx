@@ -1,9 +1,9 @@
+import { Suspense } from "react";
 import { type Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { SubscriptionContextProvider } from "@/context/subscription-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,11 +33,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SubscriptionContextProvider>
+        <Suspense fallback={<div className="h-24" />}>
           <Header />
-          <main>{children}</main>
-          <Footer />
-        </SubscriptionContextProvider>
+        </Suspense>
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

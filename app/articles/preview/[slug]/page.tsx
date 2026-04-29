@@ -1,4 +1,3 @@
-import { ArticleContent } from "@/components/articles/article-content";
 import { ArticlesFallback } from "@/components/layout/fallbacks";
 import { TrendingArticles } from "@/components/articles/trending-articles";
 import { CONTAINER_PADDING } from "@/constants/constants";
@@ -8,23 +7,9 @@ import type { ResolvingMetadata, Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { type Components } from "react-markdown";
-
-export const MarkdownComponents: Components = {
-  p: ({ children }) => (
-    <p className="leading-relaxed text-muted-foreground text-sm">{children}</p>
-  ),
-  a: ({ children, href }) => (
-    <a
-      className="underline"
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
-    </a>
-  ),
-};
+import ReactMarkdown from "react-markdown";
+import { MarkdownComponents } from "../../[slug]/page";
+import { SubscribeForm } from "@/components/subscribe-form";
 
 interface IArticleDetailsPageProps {
   params: Promise<{
@@ -55,11 +40,12 @@ export async function generateMetadata(
     const previousImages = (await parent).openGraph?.images || [];
 
     return {
-      title: article.title,
-      description: article.excerpt,
+      title: article.title + " - Preview",
+      description: article.excerpt ?? "No excerpt available for this article.",
       openGraph: {
-        title: article.title,
-        description: article.excerpt,
+        title: article.title + " - Preview",
+        description:
+          article.excerpt ?? "No excerpt available for this article.",
         images: [
           ...previousImages,
           {
@@ -80,11 +66,12 @@ export async function generateMetadata(
   }
 }
 
-export default async function ArticleDetailsPage({
+export default async function ArticleDetailsPreviewPage({
   params,
 }: IArticleDetailsPageProps) {
   const { slug } = await params;
   let article;
+
   try {
     article = await getArticleBySlug(slug);
   } catch {
@@ -118,8 +105,18 @@ export default async function ArticleDetailsPage({
           height={600}
           className="mb-6 rounded-lg w-[60vw] object-cover mx-auto"
         />
-        <ArticleContent article={article} />
+        <ReactMarkdown components={MarkdownComponents}>
+          {article.excerpt ?? "No content available for preview."}
+        </ReactMarkdown>
       </article>
+      {
+        <div className="w-[100%] border border-gray-200 rounded-md py-10 px-10 shadow-md mb-10">
+          <p className="mb-3 text-center text-sm text-muted-foreground">
+            To read the full article, subscribe now.
+          </p>
+          <SubscribeForm isSubscribed={false} />
+        </div>
+      }
       <Suspense fallback={<ArticlesFallback />}>
         <TrendingArticles />
       </Suspense>

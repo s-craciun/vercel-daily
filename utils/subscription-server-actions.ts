@@ -3,25 +3,24 @@
 import {
   API_METHODS,
   API_ROUTES,
-  SUBSCRIPTION_TOKEN_NAME,
+  SUBSCRIPTION_COOKIE_NAME,
 } from "@/constants/constants";
 import { ApiFetch } from "@/lib/api-fetch";
 import { type ISubscription } from "@/types/subscription";
 import { type IApiResponse } from "@/types/types";
 import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
 
-export const checkSubscriptionStatusAction = async (): Promise<boolean> => {
+export const checkSubscriptionStatus = async (): Promise<boolean> => {
   try {
     const cookieStore = await cookies();
-    const subscriptionToken = cookieStore.get(SUBSCRIPTION_TOKEN_NAME)?.value;
+    const subscriptionToken = cookieStore.get(SUBSCRIPTION_COOKIE_NAME)?.value;
     return !!subscriptionToken;
   } catch {
     return false;
   }
 };
 
-export const createSubscriptionAction = async (): Promise<void> => {
+export const createSubscriptionAction = async (): Promise<boolean> => {
   try {
     const result = await ApiFetch<IApiResponse<ISubscription>>(
       API_ROUTES.CREATE_SUBSCRIPTION,
@@ -39,24 +38,26 @@ export const createSubscriptionAction = async (): Promise<void> => {
     }
 
     const cookieStore = await cookies();
-    cookieStore.set(SUBSCRIPTION_TOKEN_NAME, token, {
+    cookieStore.set(SUBSCRIPTION_COOKIE_NAME, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 84600,
     });
 
-    revalidatePath("/");
+    const status = await checkSubscriptionStatus();
+
+    return !!status;
   } catch (error) {
     console.error("[createSubscriptionAction] Error:", error);
     throw new Error("Failed to create subscription");
   }
 };
 
-export const deactivateSubscriptionAction = async (): Promise<void> => {
+export const deactivateSubscriptionAction = async (): Promise<boolean> => {
   try {
     const cookieStore = await cookies();
-    const subscriptionToken = cookieStore.get(SUBSCRIPTION_TOKEN_NAME)?.value;
+    const subscriptionToken = cookieStore.get(SUBSCRIPTION_COOKIE_NAME)?.value;
 
     if (subscriptionToken) {
       await ApiFetch<IApiResponse<ISubscription>>(
@@ -69,10 +70,34 @@ export const deactivateSubscriptionAction = async (): Promise<void> => {
       );
     }
 
-    cookieStore.delete(SUBSCRIPTION_TOKEN_NAME);
-    revalidatePath("/");
+    cookieStore.delete(SUBSCRIPTION_COOKIE_NAME);
+    const status = await checkSubscriptionStatus();
+    return !!status;
   } catch (error) {
     console.error("[deactivateSubscriptionAction] Error:", error);
     throw new Error("Failed to deactivate subscription");
+  }
+};
+
+export const toggleSubscriptionFormAction = async (): Promise<{
+  error?: string;
+}> => {
+  try {
+    const isSubscribed = await checkSubscriptionStatus();
+
+    if (isSubscribed) {
+      await deactivateSubscriptionAction();
+    } else {
+      await createSubscriptionAction();
+    }
+
+    return {};
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to toggle subscription",
+    };
   }
 };

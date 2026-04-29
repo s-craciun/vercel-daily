@@ -10,7 +10,7 @@ export const SearchResults: FC<ISearchPageProps> = async ({ searchParams }) => {
   // I need the search and category params to fetch the articles,
   // so I'm awaiting them sequentially
   const { search, category } = await searchParams;
-  const articles = await getArticlesByParams({ search, category });
+  const articles = await getArticlesByParams({ search, category, limit: 5 });
 
   return articles?.length ? (
     <div className={GRID_CONTAINER}>

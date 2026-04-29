@@ -8,12 +8,12 @@ interface IClientButtonProps extends IButtonProps {
 }
 
 export const ClientButton: FC<IClientButtonProps> = ({
-  variant,
   children,
   onClick,
+  ...props
 }) => {
   return (
-    <Button variant={variant} onClick={onClick}>
+    <Button {...props} onClick={onClick}>
       {children}
     </Button>
   );

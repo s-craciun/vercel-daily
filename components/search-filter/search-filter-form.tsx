@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { SearchBox } from "./search-box";
 import { Button } from "../button/button";
 import { Select } from "./select";
-import { applySearchFilters } from "@/utils/search-filter-acrions";
+import { applySearchFilters } from "@/utils/search-filter-actions";
 import { type ISearchPageProps } from "@/app/search/page";
 import { getCategories } from "@/utils/cached-fetch";
 
