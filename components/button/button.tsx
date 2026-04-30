@@ -6,6 +6,7 @@ export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariants;
   children: React.ReactNode;
   href?: string;
+  prefetch?: boolean;
 }
 
 const commonButtonStyles =
@@ -18,15 +19,15 @@ const buttonVariants = {
 };
 
 export const Button: FC<IButtonProps> = (props) => {
-  const { variant, children, href } = props;
+  const { variant, children, href, prefetch, ...rest } = props;
   const className = buttonVariants[variant || ButtonVariants.DEFAULT];
 
   return !href ? (
-    <button className={className} type={props?.type || "button"} {...props}>
+    <button className={className} type={props?.type || "button"} {...rest}>
       {children}
     </button>
   ) : (
-    <Link className={className} href={href}>
+    <Link className={className} href={href} prefetch={prefetch}>
       {children}
     </Link>
   );

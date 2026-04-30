@@ -6,25 +6,31 @@ import { DOT } from "@/constants/constants";
 import { formatArticleCategory, formatDate } from "@/utils/format-data";
 
 interface IArticleListItemProps {
+  index?: number;
   article: IArticle;
-  loadingStrategy?: "eager" | "lazy";
 }
 
 export const ArticleListItem: FC<IArticleListItemProps> = ({
+  index,
   article,
-  loadingStrategy = "lazy",
 }) => {
+  const isFirstRow = index !== undefined && index < 3;
+
   return (
-    <Link key={article.id} href={`/articles/${article.slug ?? article.id}`}>
+    <Link
+      key={article.id}
+      href={`/articles/${article.slug ?? article.id}`}
+      prefetch={isFirstRow} // Only prefetch for the first row (potentially visible :D) to optimize performance
+    >
       <article>
-        <div className="relative w-full h-65 mb-2">
+        <div className="relative w-full aspect-[16/9] mb-2">
           <Image
             className="rounded-lg object-cover"
             src={article.image}
             alt={article.title}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            loading={loadingStrategy}
+            loading={isFirstRow ? "eager" : "lazy"}
           />
         </div>
         <span className="leading-relaxed text-muted-foreground text-sm">

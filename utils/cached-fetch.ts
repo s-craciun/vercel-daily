@@ -84,6 +84,12 @@ export const getBreakingNews = async (): Promise<IBreakingNews | null> => {
   try {
     const { data: breakingNews } = await ApiFetch<IApiResponse<IBreakingNews>>(
       API_ROUTES.BREAKING_NEWS,
+      null,
+      {
+        next: {
+          revalidate: 60,
+        },
+      },
     );
     return breakingNews;
   } catch {

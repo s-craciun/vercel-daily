@@ -31,8 +31,14 @@ export default async function ArticlesPage() {
       <h1 className="text-3xl font-bold mb-4">Browse our awesome Articles!</h1>
       <Suspense fallback={<ArticlesFallback />}>
         <div className={GRID_CONTAINER}>
-          {articles.map((article) => {
-            return <ArticleListItem key={article.id} article={article} />;
+          {articles.map((article, index) => {
+            return (
+              <ArticleListItem
+                index={index}
+                key={article.id}
+                article={article}
+              />
+            );
           })}
         </div>
       </Suspense>
