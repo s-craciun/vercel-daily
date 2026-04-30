@@ -12,13 +12,9 @@ export const SearchResults: FC<{
 
   return articles?.length ? (
     <div className={GRID_CONTAINER}>
-      {articles.map((article) => {
+      {articles.map((article, index) => {
         return (
-          <ArticleListItem
-            key={article.id}
-            article={article}
-            loadingStrategy="eager"
-          />
+          <ArticleListItem index={index} key={article.id} article={article} />
         );
       })}
     </div>

@@ -27,7 +27,7 @@ export const ApiFetch = async <T>(
       },
       method: API_METHODS.GET,
       next: {
-        revalidate: 60,
+        revalidate: 3600,
       },
     };
 

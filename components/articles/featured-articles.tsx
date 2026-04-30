@@ -31,8 +31,14 @@ export const FeaturedArticles = async () => {
           </Button>
         </div>
         <div className={GRID_CONTAINER}>
-          {featuredArticles.map((article) => {
-            return <ArticleListItem key={article.id} article={article} />;
+          {featuredArticles.map((article, index) => {
+            return (
+              <ArticleListItem
+                index={index}
+                key={article.id}
+                article={article}
+              />
+            );
           })}
         </div>
       </section>

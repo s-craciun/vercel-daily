@@ -10,8 +10,14 @@ export const TrendingArticles = async () => {
       <div>
         <h1 className="text-3xl font-bold mb-4">Trending articles</h1>
         <div className={GRID_CONTAINER}>
-          {trendingArticles.map((article) => {
-            return <ArticleListItem key={article.id} article={article} />;
+          {trendingArticles.map((article, index) => {
+            return (
+              <ArticleListItem
+                index={index}
+                key={article.id}
+                article={article}
+              />
+            );
           })}
         </div>
       </div>
