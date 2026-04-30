@@ -1,54 +1,34 @@
 "use client";
 
-import {
-  createSubscription,
-  deactivateSubscription,
-} from "@/utils/subscription-actions";
-import { useSubscriptionContext } from "@/context/subscription-context";
+import { toggleSubscriptionFormAction } from "@/lib/subscription";
 import { ButtonVariants } from "@/constants/constants";
-import { useCallback, type FC } from "react";
+import { useActionState } from "react";
 import { ClientButton } from "./button/client-button";
 
 interface ISubscribeFormProps {
   withLabel?: boolean;
+  isSubscribed: boolean;
 }
 
-export const SubscribeForm: FC<ISubscribeFormProps> = ({ withLabel }) => {
-  const {
-    status,
-    loading,
-    error,
-    setLoading,
-    setError,
-    checkSubscriptionStatus,
-  } = useSubscriptionContext();
-
-  const handleSubscriptionToggle = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      if (status) {
-        await deactivateSubscription(checkSubscriptionStatus);
-      } else {
-        await createSubscription(checkSubscriptionStatus);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
-    }
-  }, [status, setLoading, setError, checkSubscriptionStatus]);
+export const SubscribeForm = ({
+  withLabel,
+  isSubscribed,
+}: ISubscribeFormProps) => {
+  const [{ error }, formAction, isPending] = useActionState(
+    toggleSubscriptionFormAction,
+    {},
+  );
 
   return (
-    <div>
-      {!loading ? (
-        <div className="flex flex-col items-center gap-2">
+    <form action={formAction}>
+      <div className="flex flex-col items-center gap-2">
+        {!isPending ? (
           <div className="flex justify-center items-center gap-5">
             {withLabel && (
               <span className="text-sm text-muted-foreground">
                 {error ? (
                   <span className="text-sm text-red-500">{error}</span>
-                ) : status ? (
+                ) : isSubscribed ? (
                   "You are subscribed!"
                 ) : (
                   "You are not subscribed yet!"
@@ -57,18 +37,19 @@ export const SubscribeForm: FC<ISubscribeFormProps> = ({ withLabel }) => {
             )}
             <ClientButton
               type="submit"
-              variant={status ? ButtonVariants.OUTLINE : ButtonVariants.DEFAULT}
-              onClick={handleSubscriptionToggle}
+              variant={
+                isSubscribed ? ButtonVariants.OUTLINE : ButtonVariants.DEFAULT
+              }
             >
-              {status ? "Unsubscribe" : "Subscribe"}
+              {isSubscribed ? "Unsubscribe" : "Subscribe"}
             </ClientButton>
           </div>
-        </div>
-      ) : (
-        <span className="inline-flex items-center text-sm text-muted-foreground px-4 py-2 font-medium">
-          Processing your subscription...
-        </span>
-      )}
-    </div>
+        ) : (
+          <span className="inline-flex items-center text-sm text-muted-foreground px-4 py-2 font-medium">
+            Processing your subscription...
+          </span>
+        )}
+      </div>
+    </form>
   );
 };

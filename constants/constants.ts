@@ -1,4 +1,4 @@
-export const SUBSCRIPTION_TOKEN_NAME = "subscription_token";
+export const SUBSCRIPTION_COOKIE_NAME = "subscription_cookie";
 
 export enum API_METHODS {
   GET = "GET",

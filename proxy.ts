@@ -1,17 +1,22 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { SUBSCRIPTION_TOKEN_NAME } from "./constants/constants";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { SUBSCRIPTION_COOKIE_NAME } from "./constants/constants";
 
-export function proxy(request: NextRequest) {
-  const requestHeaders = new Headers(request.headers);
-  const token = request.cookies.get(SUBSCRIPTION_TOKEN_NAME)?.value;
+export function proxy(req: NextRequest) {
+  const token = req.cookies.get(SUBSCRIPTION_COOKIE_NAME)?.value;
 
-  requestHeaders.set("x-vercel-daily-subscriber", token ? "true" : "false");
+  if (token) {
+    const headers = new Headers(req.headers);
+    headers.set("x-daily-news-subscriber", token);
 
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+    return NextResponse.next({
+      request: {
+        headers,
+      },
+    });
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

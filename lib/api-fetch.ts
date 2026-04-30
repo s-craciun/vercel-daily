@@ -5,7 +5,7 @@ export const ApiFetch = async <T>(
   url: string,
   reqBody?: Record<string, unknown> | null,
   params?: Parameters<typeof fetch>[1],
-) => {
+): Promise<T & { ok: boolean }> => {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -26,9 +26,23 @@ export const ApiFetch = async <T>(
         "x-vercel-protection-bypass": bypass,
       },
       method: API_METHODS.GET,
+      next: {
+        revalidate: 60,
+      },
     };
 
-    const finalParams = { ...baseParams, ...(params || {}) };
+    const finalParams = {
+      ...baseParams,
+      ...(params || {}),
+      headers: {
+        ...baseParams.headers,
+        ...(params?.headers || {}),
+      },
+      next: {
+        ...baseParams.next,
+        ...(params?.next || {}),
+      },
+    };
 
     if (reqBody) {
       finalParams.body = JSON.stringify(reqBody);
@@ -86,7 +100,7 @@ export const ApiFetch = async <T>(
       throw new Error(errorMsg);
     }
 
-    return { data: resBody as T, ok: true };
+    return { ...(resBody as T), ok: true };
   } catch (error) {
     console.error(`[ApiFetch] Error fetching ${url}:`, error);
     if (error instanceof Error) {

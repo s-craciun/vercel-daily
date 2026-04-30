@@ -1,47 +1,29 @@
-"use client";
-
 import { type ArticleContentBlock, BlockType } from "@/types/article-content";
-import { type FC } from "react";
-import ReactMarkdown, { type Components } from "react-markdown";
+import ReactMarkdown from "react-markdown";
 import Image from "next/image";
 import { type IArticle } from "@/types/article";
-import { useSubscriptionContext } from "@/context/subscription-context";
+import { MarkdownComponents } from "@/app/articles/[slug]/page";
 import { SubscribeForm } from "../subscribe-form";
-
-const MarkdownComponents: Components = {
-  p: ({ children }) => (
-    <p className="leading-relaxed text-muted-foreground text-sm">{children}</p>
-  ),
-  a: ({ children, href }) => (
-    <a
-      className="underline"
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
-    </a>
-  ),
-};
 
 interface IArticleContentProps {
   article: IArticle;
 }
 
-export const ArticleContent: FC<IArticleContentProps> = ({ article }) => {
-  const { status } = useSubscriptionContext();
-  const content = status
+export const ArticleContent = ({
+  article,
+  isSubscribed,
+}: IArticleContentProps & { isSubscribed: boolean }) => {
+  const content = isSubscribed
     ? article.content
     : ([
         {
           type: BlockType.Paragraph,
-          text: article.excerpt,
+          text: article.excerpt || "Subscribe to read the full article!",
         },
       ] as ArticleContentBlock[]);
-
   return (
     <div className="space-y-3">
-      {content.map((block, i) => {
+      {content?.map((block, i) => {
         switch (block.type) {
           case BlockType.Paragraph:
             return (
@@ -96,15 +78,17 @@ export const ArticleContent: FC<IArticleContentProps> = ({ article }) => {
             );
           case BlockType.Image:
             return (
-              <figure key={i}>
-                <Image
-                  src={block.src || `/${article.slug}-img-${i}`}
-                  alt={block.alt || `/${article.title} image ${i}`}
-                  width={600}
-                  height={400}
-                />
+              <figure key={i} className="my-4">
+                <div className="relative w-full h-65">
+                  <Image
+                    src={block.src || `/${article.slug}-img-${i}`}
+                    alt={block.alt || `/${article.title} image ${i}`}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
                 {block.caption && (
-                  <figcaption>
+                  <figcaption className="text-sm text-muted-foreground mt-2 text-center">
                     <ReactMarkdown components={MarkdownComponents}>
                       {block.caption}
                     </ReactMarkdown>
@@ -114,12 +98,12 @@ export const ArticleContent: FC<IArticleContentProps> = ({ article }) => {
             );
         }
       })}
-      {!status && (
-        <div className="w-[100%] border border-gray-200 rounded-md py-10 px-10 shadow-md">
+      {!isSubscribed && (
+        <div className="w-[100%] border border-gray-200 rounded-md py-10 px-10 shadow-md mb-10">
           <p className="mb-3 text-center text-sm text-muted-foreground">
-            To see the entire article, please subscribe!
+            To read the full article, subscribe now.
           </p>
-          <SubscribeForm />
+          <SubscribeForm isSubscribed={false} />
         </div>
       )}
     </div>

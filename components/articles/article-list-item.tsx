@@ -7,19 +7,26 @@ import { formatArticleCategory, formatDate } from "@/utils/format-data";
 
 interface IArticleListItemProps {
   article: IArticle;
+  loadingStrategy?: "eager" | "lazy";
 }
 
-export const ArticleListItem: FC<IArticleListItemProps> = ({ article }) => {
+export const ArticleListItem: FC<IArticleListItemProps> = ({
+  article,
+  loadingStrategy = "lazy",
+}) => {
   return (
     <Link key={article.id} href={`/articles/${article.slug ?? article.id}`}>
       <article>
-        <Image
-          className="w-full border border-gray-200 rounded-lg object-cover mb-2 h-65"
-          src={article.image}
-          alt={article.title}
-          width={300}
-          height={120}
-        />
+        <div className="relative w-full h-65 mb-2">
+          <Image
+            className="rounded-lg object-cover"
+            src={article.image}
+            alt={article.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            loading={loadingStrategy}
+          />
+        </div>
         <span className="leading-relaxed text-muted-foreground text-sm">
           {formatArticleCategory(article.category)}
           <span className="mx-2">{DOT}</span>
