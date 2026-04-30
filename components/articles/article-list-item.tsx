@@ -17,7 +17,7 @@ export const ArticleListItem: FC<IArticleListItemProps> = ({
   return (
     <Link key={article.id} href={`/articles/${article.slug ?? article.id}`}>
       <article>
-        <div className="relative w-full h-65 mb-2">
+        <div className="relative w-full aspect-[16/9] mb-2">
           <Image
             className="rounded-lg object-cover"
             src={article.image}

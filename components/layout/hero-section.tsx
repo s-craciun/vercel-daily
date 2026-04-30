@@ -22,14 +22,14 @@ export const HeroSection = () => {
           <Button href="/articles">Browse Articles</Button>
         </div>
       </div>
-      <div className="relative w-120 h-80">
+      <div className="relative w-full max-w-[40rem] aspect-[4/3] mx-auto">
         <Image
-          className="rounded-md mx-auto"
+          className="rounded-md mx-auto object-cover"
           src="/hero-daily-news.webp"
           alt="Laptop"
           fill
-          sizes="(max-width: 540px) 100vw, 60vw"
-          preload
+          priority
+          sizes="(max-width: 540px) 100vw, 40vw"
         />
       </div>
     </section>

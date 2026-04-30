@@ -79,11 +79,12 @@ export const ArticleContent = ({
           case BlockType.Image:
             return (
               <figure key={i} className="my-4">
-                <div className="relative w-full h-65">
+                <div className="relative w-full aspect-[16/9]">
                   <Image
                     src={block.src || `/${article.slug}-img-${i}`}
                     alt={block.alt || `/${article.title} image ${i}`}
                     fill
+                    sizes="100vw"
                     className="object-cover rounded-lg"
                   />
                 </div>

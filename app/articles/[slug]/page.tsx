@@ -129,13 +129,13 @@ const ArticleDetails = async ({
           <span>{formatDate(article.publishedAt)}</span>
         </div>
       </div>
-      <div className="relative w-[60vw] h-96 mx-auto mb-6">
+      <div className="relative w-full max-w-[60vw] aspect-[16/9] mx-auto mb-6">
         <Image
           className="rounded-lg object-cover"
           src={article.image}
           alt={article.title}
           fill
-          preload
+          priority
           sizes="(max-width: 768px) 100vw, 60vw"
         />
       </div>
