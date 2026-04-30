@@ -3,19 +3,23 @@ import { getArticlesByParams } from "@/utils/cached-fetch";
 import { ArticleListItem } from "../articles/article-list-item";
 import { NoAvailableArticles } from "../layout/no-available-articles";
 import { type FC } from "react";
-import { type ISearchPageProps } from "@/app/search/page";
 
-export const SearchResults: FC<ISearchPageProps> = async ({ searchParams }) => {
-  // Well, in this case I cannot make a parallel await because
-  // I need the search and category params to fetch the articles,
-  // so I'm awaiting them sequentially
-  const { search, category } = await searchParams;
+export const SearchResults: FC<{
+  search?: string;
+  category?: string;
+}> = async ({ search, category }) => {
   const articles = await getArticlesByParams({ search, category, limit: 5 });
 
   return articles?.length ? (
     <div className={GRID_CONTAINER}>
       {articles.map((article) => {
-        return <ArticleListItem key={article.id} article={article} />;
+        return (
+          <ArticleListItem
+            key={article.id}
+            article={article}
+            loadingStrategy="eager"
+          />
+        );
       })}
     </div>
   ) : (

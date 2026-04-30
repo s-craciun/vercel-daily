@@ -11,6 +11,7 @@ interface ISelectProps {
 export const Select: FC<ISelectProps> = ({ options, value }) => {
   return (
     <select
+      key={`category-select-${value}`}
       className="h-10 w-[100%] border border-gray-200 rounded-md flex px-3 cursor-pointer"
       defaultValue={value}
       name="category"

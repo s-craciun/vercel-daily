@@ -7,9 +7,13 @@ import { formatArticleCategory, formatDate } from "@/utils/format-data";
 
 interface IArticleListItemProps {
   article: IArticle;
+  loadingStrategy?: "eager" | "lazy";
 }
 
-export const ArticleListItem: FC<IArticleListItemProps> = ({ article }) => {
+export const ArticleListItem: FC<IArticleListItemProps> = ({
+  article,
+  loadingStrategy = "lazy",
+}) => {
   return (
     <Link key={article.id} href={`/articles/${article.slug ?? article.id}`}>
       <article>
@@ -20,6 +24,7 @@ export const ArticleListItem: FC<IArticleListItemProps> = ({ article }) => {
             alt={article.title}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
+            loading={loadingStrategy}
           />
         </div>
         <span className="leading-relaxed text-muted-foreground text-sm">

@@ -5,6 +5,7 @@ import { ApiFetch } from "@/lib/api-fetch";
 import { type IBreakingNews, type IArticle } from "@/types/article";
 import type { ICategory, IApiResponse, ISearchParams } from "@/types/types";
 import { cacheLife, cacheTag } from "next/cache";
+import { buildSearchParams } from "./buildSearchParams";
 
 export const getAllArticles = async (): Promise<IArticle[]> => {
   cacheTag(CACHE_TAGS.ARTICLES);
@@ -23,26 +24,7 @@ export const getAllArticles = async (): Promise<IArticle[]> => {
 export const getArticlesByParams = async (
   params: ISearchParams = {},
 ): Promise<IArticle[]> => {
-  const { search, category, limit, page } = params;
-  const searchParams = new URLSearchParams();
-
-  if (search) {
-    searchParams.set("search", search);
-  }
-
-  if (category) {
-    searchParams.set("category", category);
-  }
-
-  if (limit) {
-    searchParams.set("limit", String(limit));
-  }
-
-  if (page) {
-    searchParams.set("page", String(page));
-  }
-
-  const query = searchParams.toString();
+  const query = buildSearchParams(params);
   cacheTag(CACHE_TAGS.FILTERED_ARTICLES);
   cacheLife("articles");
 

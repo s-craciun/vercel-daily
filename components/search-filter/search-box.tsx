@@ -21,6 +21,7 @@ export const SearchBox: FC<ISearchBoxProps> = ({ value }) => {
         />
       </label>
       <input
+        key={`search-box-${value}`}
         id="search-articles"
         type="search"
         defaultValue={value}

@@ -27,23 +27,6 @@ export interface ISearchPageProps {
   }>;
 }
 
-async function SearchFilterFormWrapper({
-  search,
-  category,
-}: {
-  search?: string;
-  category?: string;
-}) {
-  const categories = await getCategories();
-  return (
-    <SearchFilterForm
-      search={search}
-      category={category}
-      categories={categories}
-    />
-  );
-}
-
 export default function SearchPage({ searchParams }: ISearchPageProps) {
   return (
     <section className={CONTAINER_PADDING}>
@@ -56,15 +39,18 @@ export default function SearchPage({ searchParams }: ISearchPageProps) {
 }
 
 async function SearchPageContent({ searchParams }: ISearchPageProps) {
-  const { search, category } = await searchParams;
+  const [{ search, category }, categories] = await Promise.all([
+    searchParams,
+    getCategories(),
+  ]);
 
   return (
     <>
       <Suspense fallback={<SearchFilterFormFallback />}>
-        <SearchFilterFormWrapper search={search} category={category} />
+        <SearchFilterForm categories={categories} />
       </Suspense>
       <Suspense fallback={<ArticlesFallback />}>
-        <SearchResults searchParams={searchParams} />
+        <SearchResults search={search} category={category} />
       </Suspense>
     </>
   );
