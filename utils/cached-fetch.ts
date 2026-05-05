@@ -79,7 +79,7 @@ export const getArticleBySlug = async (slug: string): Promise<IArticle> => {
 
 export const getBreakingNews = async (): Promise<IBreakingNews | null> => {
   cacheTag(CACHE_TAGS.BREAKING_NEWS);
-  cacheLife({ expire: 60 });
+  cacheLife("minutes");
 
   try {
     const { data: breakingNews } = await ApiFetch<IApiResponse<IBreakingNews>>(
