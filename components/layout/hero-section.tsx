@@ -19,9 +19,7 @@ export const HeroSection = () => {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button href="/articles" prefetch>
-            Browse Articles
-          </Button>
+          <Button href="/articles">Browse Articles</Button>
         </div>
       </div>
       <div className="relative w-full max-w-[40rem] aspect-[4/3] mx-auto">

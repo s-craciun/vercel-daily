@@ -25,9 +25,7 @@ export const Header = async () => {
         </Link>
         <nav className="flex flex-row items-center gap-8">
           <Link href="/">Home</Link>
-          <Link href="/search" prefetch>
-            Search
-          </Link>
+          <Link href="/search">Search</Link>
         </nav>
       </div>
       <div className="md:ml-auto">

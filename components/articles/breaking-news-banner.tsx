@@ -8,7 +8,7 @@ export const BreakingNewsBanner = async () => {
 
   return (
     !!breakingNews && (
-      <Link href={`/articles/${breakingNews.articleId}`} prefetch>
+      <Link href={`/articles/${breakingNews.articleId}`}>
         <div
           className={`bg-black text-white ${CONTAINER_PADDING} !py-4 flex gap-2`}
         >
