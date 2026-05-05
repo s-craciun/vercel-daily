@@ -1,4 +1,4 @@
-"use cache";
+"use cache: remote";
 
 import { API_ROUTES, CACHE_TAGS } from "@/constants/constants";
 import { ApiFetch } from "@/lib/api-fetch";
